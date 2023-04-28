@@ -1,7 +1,7 @@
-import { LegacyRef, MutableRefObject, useRef } from 'react';
+import { useRef } from 'react';
 
-const DrumPad: React.FC<{ label: string, audio:string, handleClick: (ref: any) => void }> = ({ label, audio, handleClick }) => {
-  const audioRef = useRef(null);
+const DrumPad: React.FC<{ label: string, audio:string, handleClick: (ref: React.RefObject<HTMLAudioElement>) => void }> = ({ label, audio, handleClick }) => {
+  const audioRef = useRef<HTMLAudioElement>(null);
   return (
     <button onClick={()=>handleClick(audioRef)} className="drum-pad">
        <div className="inner-wrapper">
@@ -35,7 +35,13 @@ export default function Home() {
       <div id="drum-machine">
         <div id="display">
           {data.map((item) => (
-            <DrumPad handleClick={(audioRef) => audioRef.current.play()} key={item.label} {...item} />
+            <DrumPad handleClick={(audioRef) =>{
+              if(audioRef && audioRef.current){
+                audioRef.current.play()
+                }
+              }} 
+              key={item.label} {...item}
+             />
           ))}
         </div>
       </div>
