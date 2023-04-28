@@ -1,7 +1,24 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const DrumPad: React.FC<{ label: string, audio:string, handleClick: (ref: React.RefObject<HTMLAudioElement>) => void }> = ({ label, audio, handleClick }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+
+   const keypressCallback =  (event: KeyboardEvent) => {
+      const keyPressed = event.code.replace("Key","")
+      if(keyPressed === label){
+        if(audioRef && audioRef.current){
+          audioRef.current.play();
+        }
+      }
+    }
+    document.addEventListener("keypress",keypressCallback)
+    return () => {
+      document.removeEventListener("keypress",keypressCallback)
+    }
+  },[label])
+
   return (
     <button onClick={()=>handleClick(audioRef)} className="drum-pad">
        <div className="inner-wrapper">
